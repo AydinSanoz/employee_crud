@@ -22,10 +22,6 @@ const schema = yup.object().shape({
 
 export default function AddEmployee() {
   const [formData, setFormData] = useState([]);
-  console.log(
-    "🚀 ~ file: AddEmployee.js:25 ~ AddEmployee ~ formData:",
-    formData
-  );
 
   return (
     <Formik

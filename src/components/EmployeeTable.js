@@ -1,7 +1,24 @@
 import Table from "react-bootstrap/Table";
 import { BiEnvelopeOpen, BiEraser, BiEdit } from "react-icons/bi";
 
-function EmployeeTable(props) {
+const TR = ({ id, onEdit, employee }) => (
+  <tr key={id}>
+    <td>1</td>
+    <td>#</td>
+    <td>{employee.firstName}</td>
+    <td>{employee.lastName} </td>
+    <td>{employee.email} </td>
+    <td>{employee.phone} </td>
+    <td>{employee.description} </td>
+    <td>
+      <BiEdit onClick={onEdit} />
+      <BiEraser />
+      <BiEnvelopeOpen />
+    </td>
+  </tr>
+);
+
+function EmployeeTable({ onEdit, employees }) {
   return (
     <Table responsive>
       <thead>
@@ -17,20 +34,9 @@ function EmployeeTable(props) {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>#</td>
-          <td>Aydin</td>
-          <td>Sanoz</td>
-          <td>a_sanoz@hotmail.com</td>
-          <td>+417068072</td>
-          <td>Human Resource</td>
-          <td>
-            <BiEdit onClick={props.onEdit} />
-            <BiEraser />
-            <BiEnvelopeOpen />
-          </td>
-        </tr>
+        {employees.map((employee, id) => {
+          return <TR id={id} onEdit={onEdit} employee={employee} />;
+        })}
       </tbody>
     </Table>
   );
