@@ -1,0 +1,13 @@
+.biIcon  svg  {
+
+  margin: 0.2rem;
+  padding : 0.2 rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  stroke-width: 0.02rem;
+  fill: blue;
+}
+
+.spinner {
+  margin: auto;
+}

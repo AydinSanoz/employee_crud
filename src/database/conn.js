@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 
 export default async function connectDB() {
-  console.log(process.env.MONGO_URL);
-
   await mongoose
     .connect(process.env.MONGO_URL)
     .then(({ connection }) => {
