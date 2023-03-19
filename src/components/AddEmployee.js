@@ -6,6 +6,8 @@ import Row from "react-bootstrap/Row";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
+import { postEmployee } from "@/lib/helper";
+import { useEffect } from "react";
 
 const schema = yup.object().shape({
   firstName: yup.string().min(2, "Too Short").max(10, "Too Long").required(),
@@ -20,8 +22,15 @@ const schema = yup.object().shape({
   terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
-export default function AddEmployee() {
+export default function AddEmployee({ onVisible }) {
   const [formData, setFormData] = useState([]);
+
+  useEffect(() => {
+    Object.keys(formData).length &&
+      postEmployee(formData)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+  }, [formData]);
 
   return (
     <Formik

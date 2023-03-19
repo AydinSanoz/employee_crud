@@ -1,31 +1,24 @@
 import EmployeeTable from "@/components/EmployeeTable";
 import AddEmployee from "@/components/AddEmployee";
 import { useState, useEffect } from "react";
-import { Inter } from "next/font/google";
 import { Button } from "react-bootstrap";
 import Head from "next/head";
-
-const inter = Inter({ subsets: ["latin"] });
+import { getEmployees } from "@/lib/helper";
 
 export default function Home() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
-    getEmployees().then((data) => setEmployees(data));
-  }, []);
+    setTimeout(() => {
+      getEmployees().then((data) => setEmployees(data));
+    }, 5000);
+  }, [employees]);
 
-  const handleUpdate = () => {
-    !visible && setVisible(!visible);
-  };
   const handleVisible = () => {
     setVisible(!visible);
   };
-  const getEmployees = async () => {
-    const response = await fetch("http://localhost:3000/api/employee");
-    const json = response.json();
-    return json;
-  };
+
   return (
     <>
       <Head>
@@ -36,8 +29,8 @@ export default function Home() {
       </Head>
       <main>
         <Button onClick={handleVisible}>Add Employee</Button>
-        {visible && <AddEmployee />}
-        <EmployeeTable onEdit={handleUpdate} employees={employees} />
+        {visible && <AddEmployee onVisible={handleVisible} />}
+        <EmployeeTable onVisible={handleVisible} employees={employees} />
       </main>
     </>
   );
