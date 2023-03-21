@@ -8,6 +8,8 @@ import * as yup from "yup";
 import { useState } from "react";
 import { postEmployee } from "@/lib/helper";
 import { useEffect } from "react";
+import { Badge } from "react-bootstrap";
+import styles from "@/styles/AddEmployee.module.css";
 
 const schema = yup.object().shape({
   firstName: yup.string().min(2, "Too Short").max(10, "Too Long").required(),
@@ -28,7 +30,9 @@ export default function AddEmployee({ onVisible }) {
   useEffect(() => {
     Object.keys(formData).length &&
       postEmployee(formData)
-        .then((res) => console.log(res))
+        .then((res) => {
+          console.log(res), onVisible();
+        })
         .catch((err) => console.log(err));
   }, [formData]);
 
@@ -56,6 +60,9 @@ export default function AddEmployee({ onVisible }) {
         errors,
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
+          <Badge bg="success" className={styles.center}>
+            Data is Recorded
+          </Badge>
           <Row className="mb-3">
             <Form.Group as={Col} md="4" controlId="validationFormikFirstName">
               <Form.Label>First name</Form.Label>
@@ -150,7 +157,9 @@ export default function AddEmployee({ onVisible }) {
               id="validationFormik0"
             />
           </Form.Group>
-          <Button type="submit">Submit form</Button>
+          <Button type="submit" variant="info">
+            Submit form
+          </Button>
         </Form>
       )}
     </Formik>
