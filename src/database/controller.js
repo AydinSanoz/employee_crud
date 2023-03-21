@@ -3,11 +3,7 @@ import { employeeModel } from "@/models/employeeModel";
 export async function getEmployees(req, res) {
   await employeeModel
     .find()
-    .then((employees) =>
-      employees.length
-        ? res.status(200).json(employees)
-        : res.status(201).json({ employees: "No employees" })
-    )
+    .then((employees) => res.status(200).json(employees))
     .catch((err) => res.status(401).json({ error: err.message }));
 }
 
@@ -42,7 +38,7 @@ export async function updateEmployee(req, res) {
   if (id && formData) {
     await employeeModel
       .findByIdAndUpdate(id, formData)
-      .then((employee) => res.status(200).json({ updated: employee }))
+      .then((employee) => res.status(200).json(employee))
       .catch((err) => res.status(401).json({ error: err.message }));
   }
   res.status(401).json({ error: "employee can not provided" });
@@ -53,7 +49,7 @@ export async function deleteEmployee(req, res) {
   if (id) {
     await employeeModel
       .findByIdAndDelete(id)
-      .then((employee) => res.status(200).json({ deletedData: employee }))
+      .then((employee) => res.status(200).json(employee))
       .catch((err) => res.status(404).json({ errror: err.message }));
   }
   res.status(401).json({ errror: "Employee can not provided" });
@@ -64,7 +60,7 @@ export async function deleteEmployees(req, res) {
     .deleteMany()
     .then((employees) => {
       employees;
-      res.status(200).json({ employees: employees });
+      res.status(200).json(employees);
     })
     .catch((err) => res.status(404).json({ error: err.message }));
 }
