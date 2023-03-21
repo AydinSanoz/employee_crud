@@ -3,20 +3,32 @@ import AddEmployee from "@/components/AddEmployee";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import Head from "next/head";
-import { getEmployees } from "@/lib/helper";
+import { getEmployee, getEmployees } from "@/lib/helper";
+import UpdateEmployee from "@/components/UpdateEmployee";
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
+  const [flag, setFlag] = useState(false);
   const [employees, setEmployees] = useState([]);
+  const [employee, setEmployee] = useState();
 
   useEffect(() => {
     setTimeout(() => {
       getEmployees().then((data) => setEmployees(data));
-    }, 5000);
+    }, 2000);
   }, [employees]);
+
+  function handleUpdate(id) {
+    !visible && setVisible(!visible);
+    getEmployee(id).then((res) => {
+      setEmployee(res);
+    });
+    setFlag("true");
+  }
 
   const handleVisible = () => {
     setVisible(!visible);
+    setFlag(false);
   };
 
   return (
@@ -28,9 +40,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Button onClick={handleVisible}>Add Employee</Button>
-        {visible && <AddEmployee onVisible={handleVisible} />}
-        <EmployeeTable onVisible={handleVisible} employees={employees} />
+        <Button onClick={handleVisible} variant="primary">
+          Add Employee
+        </Button>
+        {flag
+          ? visible && (
+              <UpdateEmployee {...employee} onVisible={handleVisible} />
+            )
+          : visible && <AddEmployee onVisible={handleVisible} />}
+
+        <EmployeeTable onUpdate={handleUpdate} employees={employees} />
       </main>
     </>
   );

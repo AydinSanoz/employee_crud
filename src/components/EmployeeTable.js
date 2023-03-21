@@ -2,10 +2,10 @@ import Table from "react-bootstrap/Table";
 import { BiEnvelopeOpen, BiEraser, BiEdit } from "react-icons/bi";
 import styles from "@/styles/EmployeeTable.module.css";
 import Spinner from "react-bootstrap/Spinner";
-import { useEffect } from "react";
+
 import { deleteEmployee } from "@/lib/helper";
 
-const TR = ({ onVisible, onDelete, employee }) => (
+const TR = ({ onEdit, onDelete, employee }) => (
   <tr key={employee._id}>
     <td>{employee._id}</td>
     <td>#</td>
@@ -15,7 +15,7 @@ const TR = ({ onVisible, onDelete, employee }) => (
     <td>{employee.phone} </td>
     <td>{employee.description} </td>
     <td className={styles.biIcon}>
-      <BiEdit onClick={onVisible} />
+      <BiEdit onClick={() => onEdit(employee._id)} />
       <BiEraser
         onClick={() => {
           onDelete(employee._id);
@@ -26,7 +26,7 @@ const TR = ({ onVisible, onDelete, employee }) => (
   </tr>
 );
 
-export default function EmployeeTable({ onVisible, employees }) {
+export default function EmployeeTable({ onUpdate, employees }) {
   const handleDelete = (id) => {
     deleteEmployee(id)
       .then((res) => console.log(res))
@@ -47,6 +47,7 @@ export default function EmployeeTable({ onVisible, employees }) {
           <th>Operations</th>
         </tr>
       </thead>
+
       {!employees ? (
         <Spinner className={styles.spinner} />
       ) : (
@@ -55,7 +56,7 @@ export default function EmployeeTable({ onVisible, employees }) {
             return (
               <TR
                 key={employee._id}
-                onVisible={onVisible}
+                onEdit={onUpdate}
                 onDelete={handleDelete}
                 employee={employee}
               />
