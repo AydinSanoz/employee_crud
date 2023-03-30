@@ -26,11 +26,10 @@ export default function Home() {
     setFlag("true");
   }
 
-  const handleVisible = () => {
+  function handleVisible() {
     setVisible(!visible);
     setFlag(false);
-  };
-
+  }
   return (
     <>
       <Head>
@@ -48,7 +47,6 @@ export default function Home() {
               <UpdateEmployee {...employee} onVisible={handleVisible} />
             )
           : visible && <AddEmployee onVisible={handleVisible} />}
-
         <EmployeeTable onUpdate={handleUpdate} employees={employees} />
       </main>
     </>
