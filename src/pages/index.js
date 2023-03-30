@@ -5,9 +5,10 @@ import { Button } from "react-bootstrap";
 import Head from "next/head";
 import { getEmployee, getEmployees } from "@/lib/helper";
 import UpdateEmployee from "@/components/UpdateEmployee";
+import { useSelector } from "react-redux";
 
 export default function Home() {
-  const [visible, setVisible] = useState(false);
+  const visible = useSelector((state) => state.client.toggleForm);
   const [flag, setFlag] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState();
@@ -26,10 +27,6 @@ export default function Home() {
     setFlag("true");
   }
 
-  function handleVisible() {
-    setVisible(!visible);
-    setFlag(false);
-  }
   return (
     <>
       <Head>
@@ -39,15 +36,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Button onClick={handleVisible} variant="primary">
-          Add Employee
-        </Button>
+        <Button variant="primary">Add Employee</Button>
         {flag
-          ? visible && (
-              <UpdateEmployee {...employee} onVisible={handleVisible} />
-            )
-          : visible && <AddEmployee onVisible={handleVisible} />}
-        <EmployeeTable onUpdate={handleUpdate} employees={employees} />
+          ? visible && <UpdateEmployee {...employee} />
+          : visible && <AddEmployee />}
+        <EmployeeTable employees={employees} />
       </main>
     </>
   );
