@@ -12,4 +12,4 @@ const employeeSchema = new Schema({
 });
 
 export const employeeModel =
-  models.Employee || model("Employee", employeeSchema);
+  models?.Employee || model("Employee", employeeSchema);

@@ -9,7 +9,7 @@ import {
 
 function Header() {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" sticky="top">
       <Container fluid>
         <Navbar.Brand href="#home">Next Employee App</Navbar.Brand>
         <Navbar.Toggle />
