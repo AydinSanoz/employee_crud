@@ -7,12 +7,15 @@
   stroke-width: 0.02rem;
   fill: blue;
 }
-
-
 .center {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: auto;
+}
+.table{
+  border-top: 1px solid grey;
+  margin-top : 1rem
 }

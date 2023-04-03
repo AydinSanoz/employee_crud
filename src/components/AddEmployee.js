@@ -1,45 +1,57 @@
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Row from "react-bootstrap/Row";
+import { Button, Col, Form, Row, Badge } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useState } from "react";
-import { postEmployee } from "@/lib/helper";
-import { useEffect } from "react";
-import { Badge } from "react-bootstrap";
+import { getEmployees, postEmployee } from "@/lib/helper";
+import { useMutation, useQueryClient } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { statusAction, toggleChangeAction, updateAction } from "@/redux/store";
 import styles from "@/styles/AddEmployee.module.css";
 
 const schema = yup.object().shape({
-  firstName: yup.string().min(2, "Too Short").max(10, "Too Long").required(),
-  lastName: yup.string().min(2, "Too Short").max(10, "Too Long").required(),
+  firstName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
+  lastName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
   email: yup.string().email("Invalid Email").required(),
   phone: yup.number().required(),
-  description: yup
-    .string()
-    .min(10, "Too Short")
-    .max(100, "Too Long")
-    .required(),
+  description: yup.string().min(5, "Too Short").max(100, "Too Long").required(),
   terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
-export default function AddEmployee({ onVisible }) {
-  const [formData, setFormData] = useState([]);
+export default function AddEmployee() {
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const addMutation = useMutation("postEmployee", postEmployee, {
+    onSuccess: (data) => {
+      console.log("data Added", data);
+      queryClient.prefetchQuery("getEmployees");
+    },
+  });
 
-  useEffect(() => {
-    Object.keys(formData).length &&
-      postEmployee(formData)
-        .then((res) => {
-          console.log(res), onVisible();
-        })
-        .catch((err) => console.log(err));
-  }, [formData]);
+  function handleAdd(formData) {
+    if (Object.keys(formData).length == 0) {
+      console.log("Dont have form data");
+    }
+    addMutation.mutate(formData);
+  }
+
+  if (addMutation.isLoading) return <div>Loading...</div>;
+  if (addMutation.isError)
+    return (
+      <Badge className={styles.center} bg="danger">
+        {addMutation.error.message}
+      </Badge>
+    );
+  if (addMutation.isSuccess)
+    return (
+      <Badge className={styles.center} bg="success">
+        Data inserted
+      </Badge>
+    );
+  dispatch(toggleChangeAction());
 
   return (
     <Formik
       validationSchema={schema}
-      onSubmit={setFormData}
+      onSubmit={handleAdd}
       initialValues={{
         firstName: "",
         lastName: "",
@@ -60,9 +72,6 @@ export default function AddEmployee({ onVisible }) {
         errors,
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
-          <Badge bg="success" className={styles.center}>
-            Data is Recorded
-          </Badge>
           <Row className="mb-3">
             <Form.Group as={Col} md="4" controlId="validationFormikFirstName">
               <Form.Label>First name</Form.Label>
@@ -158,7 +167,7 @@ export default function AddEmployee({ onVisible }) {
             />
           </Form.Group>
           <Button type="submit" variant="info">
-            Submit form
+            Add
           </Button>
         </Form>
       )}

@@ -1,14 +1,11 @@
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useState } from "react";
-import { postEmployee, updateEmployee } from "@/lib/helper";
-import { useEffect } from "react";
-import { Badge } from "react-bootstrap";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { getEmployee, updateEmployee } from "@/lib/helper";
 import styles from "@/styles/AddEmployee.module.css";
 
 const schema = yup.object().shape({
@@ -24,30 +21,43 @@ const schema = yup.object().shape({
   terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
-export default function UpdateEmployee({
-  onVisible,
-  _id,
-  firstName,
-  lastName,
-  email,
-  phone,
-  description,
-}) {
-  const [formData, setFormData] = useState([]);
+export default function UpdateEmployee({ updateId, updateMutation }) {
+  const {
+    isLoading,
+    isError,
+    error,
+    data: employee,
+  } = useQuery(["getEmployee", updateId], () => getEmployee(updateId));
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>{error.message}</div>;
+  const { firstName, lastName, email, phone, description } = employee;
 
-  useEffect(() => {
-    Object.keys(formData).length &&
-      updateEmployee(formData, _id)
-        .then((res) => {
-          console.log(res), onVisible();
-        })
-        .catch((err) => console.log(err));
-  }, [formData]);
+  async function handleUpdate(values) {
+    if (Object.keys(values).length == 0) {
+      console.log("No formData");
+    }
+    await updateMutation.mutate(values);
+  }
+
+  // if (updateMutation.isLoading) return <div>Loading...</div>;
+  // if (updateMutation.isError)
+  //   return (
+  //     <Badge bg="danger" className={styles.center}>
+  //       {updateMutation.error.message}
+  //     </Badge>
+  //   );
+  // if (updateMutation.isSuccess) {
+  //   return (
+  //     <Badge bg="success" className={styles.center}>
+  //       Data Updated
+  //     </Badge>
+  //   );
+  // }
 
   return (
     <Formik
       validationSchema={schema}
-      onSubmit={setFormData}
+      onSubmit={handleUpdate}
       initialValues={{
         firstName,
         lastName,
@@ -68,9 +78,6 @@ export default function UpdateEmployee({
         errors,
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
-          <Badge bg="success" className={styles.center}>
-            Data is Recorded
-          </Badge>
           <Row className="mb-3">
             <Form.Group as={Col} md="4" controlId="validationFormikFirstName">
               <Form.Label>First name</Form.Label>
@@ -166,7 +173,7 @@ export default function UpdateEmployee({
             />
           </Form.Group>
           <Button type="submit" variant="danger">
-            Update form
+            Update
           </Button>
         </Form>
       )}

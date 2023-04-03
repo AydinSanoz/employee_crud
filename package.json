@@ -19,7 +19,13 @@
     "react-bootstrap": "^2.7.2",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
+    "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
     "yup": "^1.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.37.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }
