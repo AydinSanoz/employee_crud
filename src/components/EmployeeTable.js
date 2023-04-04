@@ -1,11 +1,11 @@
-import { Table, Badge } from "react-bootstrap";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BiEnvelopeOpen, BiEraser, BiEdit } from "react-icons/bi";
-import styles from "@/styles/EmployeeTable.module.css";
-import Spinner from "react-bootstrap/Spinner";
+import { toggleChangeAction, updateAction } from "@/redux/store";
 import { deleteEmployee, getEmployees } from "@/lib/helper";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleChangeAction, updateAction } from "@/redux/store";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import styles from "@/styles/EmployeeTable.module.css";
+import { Table, Badge } from "react-bootstrap";
+import Spinner from "react-bootstrap/Spinner";
 
 export default function EmployeeTable() {
   const {
@@ -16,7 +16,12 @@ export default function EmployeeTable() {
   } = useQuery("getEmployees", getEmployees);
   if (isLoading) return <Spinner className={styles.center} />;
   if (isError) return <div>{error}</div>;
-  if (employees.length === 0) return <div>No data </div>;
+  if (employees.length === 0)
+    return (
+      <Badge bg="warning" className={styles.center}>
+        No data{" "}
+      </Badge>
+    );
 
   return (
     <>
@@ -47,21 +52,20 @@ function TR({ employee }) {
   const visible = useSelector((state) => state.client.toggleForm);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-
-  function toggleToUpdate(id) {
-    dispatch(toggleChangeAction());
-    if (visible) dispatch(updateAction(id));
-  }
   const deleteMutation = useMutation(
     "deleteEmployee",
     (newData) => deleteEmployee(newData),
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries("getEmployees");
         console.log("deleted", data);
+        queryClient.prefetchQuery("getEmployees");
       },
     }
   );
+  function toggleToUpdate(id) {
+    dispatch(toggleChangeAction());
+    if (visible) dispatch(updateAction(id));
+  }
   function handleDelete(id) {
     if (!id) {
       console.log("employee id is not selected");

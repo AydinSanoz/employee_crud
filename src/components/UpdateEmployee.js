@@ -1,23 +1,16 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Badge, Button, Form, Row, Col } from "react-bootstrap";
+import styles from "@/styles/AddEmployee.module.css";
+import { getEmployee } from "@/lib/helper";
+import { useQuery } from "react-query";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getEmployee, updateEmployee } from "@/lib/helper";
-import styles from "@/styles/AddEmployee.module.css";
 
 const schema = yup.object().shape({
-  firstName: yup.string().min(2, "Too Short").max(10, "Too Long").required(),
-  lastName: yup.string().min(2, "Too Short").max(10, "Too Long").required(),
+  firstName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
+  lastName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
   email: yup.string().email("Invalid Email").required(),
   phone: yup.number().required(),
-  description: yup
-    .string()
-    .min(10, "Too Short")
-    .max(100, "Too Long")
-    .required(),
+  description: yup.string().min(5, "Too Short").max(100, "Too Long").required(),
   terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
@@ -33,26 +26,26 @@ export default function UpdateEmployee({ updateId, updateMutation }) {
   const { firstName, lastName, email, phone, description } = employee;
 
   async function handleUpdate(values) {
-    if (Object.keys(values).length == 0) {
+    if (Object.keys(values).length === 0) {
       console.log("No formData");
     }
     await updateMutation.mutate(values);
   }
 
-  // if (updateMutation.isLoading) return <div>Loading...</div>;
-  // if (updateMutation.isError)
-  //   return (
-  //     <Badge bg="danger" className={styles.center}>
-  //       {updateMutation.error.message}
-  //     </Badge>
-  //   );
-  // if (updateMutation.isSuccess) {
-  //   return (
-  //     <Badge bg="success" className={styles.center}>
-  //       Data Updated
-  //     </Badge>
-  //   );
-  // }
+  if (updateMutation.isLoading) return <div>Loading...</div>;
+  if (updateMutation.isError)
+    return (
+      <Badge bg="danger" className={styles.center}>
+        {updateMutation.error.message}
+      </Badge>
+    );
+  if (updateMutation.isSuccess) {
+    return (
+      <Badge bg="success" className={styles.center}>
+        Data Updated
+      </Badge>
+    );
+  }
 
   return (
     <Formik

@@ -1,7 +1,7 @@
 import AddEmployee from "./AddEmployee";
 import UpdateEmployee from "./UpdateEmployee";
 import { useSelector } from "react-redux";
-import { getEmployee, updateEmployee } from "@/lib/helper";
+import { updateEmployee } from "@/lib/helper";
 import { useQueryClient, useMutation } from "react-query";
 
 export default function Form() {
@@ -15,6 +15,7 @@ export default function Form() {
     {
       onSuccess: async (data) => {
         console.log("data updated");
+        queryClient.invalidateQueries("getEmployees");
         queryClient.prefetchQuery("getEmployees");
       },
     }
