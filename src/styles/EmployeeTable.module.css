@@ -1,12 +1,29 @@
 .biIcon  svg  {
-
   margin: 0.2rem;
   padding : 0.2 rem;
   width: 1.2rem;
   height: 1.2rem;
-  stroke-width: 0.02rem;
-  fill: blue;
+  stroke-width: 0.5px;
 }
+.deletebutton {
+  color : red
+  
+}
+.editbutton {
+  color : blue
+}
+.emailbutton{
+  color: green
+}
+.biIcon  :hover  {
+  color: #173edc;
+  transition: easy 0.25 all;
+  background-color: #dcdcdc;
+  padding: 0.05rem;
+  
+}
+
+
 .center {
   margin: auto;
   margin-top: 1rem;
@@ -19,3 +36,10 @@
   border-top: 1px solid grey;
   margin-top : 1rem
 }
+.table thead {
+  background-color: #262a2c;
+  color: #fff;
+  
+
+}
+

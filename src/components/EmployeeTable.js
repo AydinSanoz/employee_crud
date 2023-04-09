@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BiEnvelopeOpen, BiEraser, BiEdit } from "react-icons/bi";
-import { toggleChangeAction, updateAction } from "@/redux/store";
+import {
+  deleteAction,
+  toggleChangeAction,
+  updateAction,
+} from "@/redux/reducer";
 import { deleteEmployee, getEmployees } from "@/lib/helper";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "@/styles/EmployeeTable.module.css";
@@ -49,41 +53,25 @@ export default function EmployeeTable() {
 }
 
 function TR({ employee }) {
-  const visible = useSelector((state) => state.client.toggleForm);
+  const formVisible = useSelector((state) => state.client.formVisible);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const deleteMutation = useMutation(
-    "deleteEmployee",
-    (newData) => deleteEmployee(newData),
-    {
-      onSuccess: (data) => {
-        console.log("deleted", data);
-        queryClient.prefetchQuery("getEmployees");
-      },
-    }
-  );
-  function toggleToUpdate(id) {
+
+  function onUpdate() {
     dispatch(toggleChangeAction());
-    if (visible) dispatch(updateAction(id));
+    dispatch(updateAction(employee._id));
   }
-  function handleDelete(id) {
-    if (!id) {
-      console.log("employee id is not selected");
+  function onDelete() {
+    console.log(formVisible);
+    if (!formVisible) {
+      dispatch(deleteAction(employee._id));
+    } else {
+      dispatch(toggleChangeAction());
     }
-    deleteMutation.mutate(id);
   }
-  if (deleteMutation.isLoading)
-    return (
-      <tr>
-        <td>Deleting...</td>
-      </tr>
-    );
-  if (deleteMutation.isError)
-    return (
-      <tr>
-        <td>{deleteMutation.error.message}</td>
-      </tr>
-    );
+  function onEmail() {
+    console.log("onEmail pressed");
+  }
 
   return (
     <tr key={employee._id}>
@@ -95,9 +83,9 @@ function TR({ employee }) {
       <td>{employee.phone} </td>
       <td>{employee.description} </td>
       <td className={styles.biIcon}>
-        <BiEdit onClick={() => toggleToUpdate(employee._id)} />
-        <BiEraser onClick={() => handleDelete(employee._id)} />
-        <BiEnvelopeOpen />
+        <BiEdit className={styles.editbutton} onClick={onUpdate} />
+        <BiEraser className={styles.deletebutton} onClick={onDelete} />
+        <BiEnvelopeOpen className={styles.emailbutton} onClick={onEmail} />
       </td>
     </tr>
   );
