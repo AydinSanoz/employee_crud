@@ -1,15 +1,15 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { BiEnvelopeOpen, BiEraser, BiEdit } from "react-icons/bi";
 import {
   deleteAction,
   toggleChangeAction,
   updateAction,
 } from "@/redux/reducer";
-import { deleteEmployee, getEmployees } from "@/lib/helper";
-import { useSelector, useDispatch } from "react-redux";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { BiEnvelopeOpen, BiEraser, BiEdit } from "react-icons/bi";
 import styles from "@/styles/EmployeeTable.module.css";
+import { useSelector, useDispatch } from "react-redux";
 import { Table, Badge } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
+import { getEmployees } from "@/lib/helper";
 
 export default function EmployeeTable() {
   const {
