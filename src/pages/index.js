@@ -65,12 +65,14 @@ function DeleteComponenet({ handleDelete, handleCancel }) {
   return (
     <div className={styles.container}>
       <span>Do you want to delete? </span>
-      <button className={styles.yes} onClick={handleDelete}>
-        Yes
-      </button>
-      <button className={styles.no} onClick={handleCancel}>
-        No
-      </button>
+      <div>
+        <button className={styles.yes} onClick={handleDelete}>
+          Yes
+        </button>
+        <button className={styles.no} onClick={handleCancel}>
+          No
+        </button>
+      </div>
     </div>
   );
 }
