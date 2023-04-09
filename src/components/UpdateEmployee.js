@@ -4,6 +4,8 @@ import { getEmployee, updateEmployee, getEmployees } from "@/lib/helper";
 import { useQuery, useMutation } from "react-query";
 import { useQueryClient } from "react-query";
 import { Formik } from "formik";
+import { useDispatch } from "react-redux";
+import { updateAction } from "@/redux/reducer";
 
 export default function UpdateEmployee({ updateId, schema }) {
   const queryClient = useQueryClient();
@@ -19,8 +21,9 @@ export default function UpdateEmployee({ updateId, schema }) {
     },
     {
       onSuccess: async (data) => {
-        queryClient.invalidateQueries("getEmployees", getEmployees);
-        console.log("data updated");
+        queryClient.prefetchQuery("getEmployees", getEmployees);
+        queryClient.invalidateQueries("getEmployee", getEmployee);
+        console.log("data updated", data);
       },
     }
   );
