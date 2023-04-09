@@ -1,26 +1,29 @@
 import { Badge, Button, Form, Row, Col } from "react-bootstrap";
 import styles from "@/styles/AddEmployee.module.css";
-import { getEmployee } from "@/lib/helper";
-import { useQuery } from "react-query";
+import { getEmployee, updateEmployee, getEmployees } from "@/lib/helper";
+import { useQuery, useMutation } from "react-query";
+import { useQueryClient } from "react-query";
 import { Formik } from "formik";
-import * as yup from "yup";
 
-const schema = yup.object().shape({
-  firstName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
-  lastName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
-  email: yup.string().email("Invalid Email").required(),
-  phone: yup.number().required(),
-  description: yup.string().min(5, "Too Short").max(100, "Too Long").required(),
-  terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-});
-
-export default function UpdateEmployee({ updateId, updateMutation }) {
+export default function UpdateEmployee({ updateId, schema }) {
+  const queryClient = useQueryClient();
   const {
     isLoading,
     isError,
     error,
     data: employee,
   } = useQuery(["getEmployee", updateId], () => getEmployee(updateId));
+  const updateMutation = useMutation(
+    (newData) => {
+      updateEmployee(newData, updateId);
+    },
+    {
+      onSuccess: async (data) => {
+        queryClient.invalidateQueries("getEmployees", getEmployees);
+        console.log("data updated");
+      },
+    }
+  );
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>{error.message}</div>;
   const { firstName, lastName, email, phone, description } = employee;
@@ -165,7 +168,7 @@ export default function UpdateEmployee({ updateId, updateMutation }) {
               id="validationFormik0"
             />
           </Form.Group>
-          <Button type="submit" variant="danger">
+          <Button type="submit" variant="warning">
             Update
           </Button>
         </Form>

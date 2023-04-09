@@ -1,28 +1,18 @@
 import { Button, Col, Form, Row, Badge } from "react-bootstrap";
 import { Formik } from "formik";
-import * as yup from "yup";
+
 import { getEmployees, postEmployee } from "@/lib/helper";
 import { useMutation, useQueryClient } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { statusAction, toggleChangeAction, updateAction } from "@/redux/store";
 import styles from "@/styles/AddEmployee.module.css";
+import { useDispatch } from "react-redux";
 
-const schema = yup.object().shape({
-  firstName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
-  lastName: yup.string().min(2, "Too Short").max(20, "Too Long").required(),
-  email: yup.string().email("Invalid Email").required(),
-  phone: yup.number().required(),
-  description: yup.string().min(5, "Too Short").max(100, "Too Long").required(),
-  terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-});
-
-export default function AddEmployee() {
+export default function AddEmployee({ schema }) {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const addMutation = useMutation("postEmployee", postEmployee, {
+  const addMutation = useMutation(postEmployee, {
     onSuccess: (data) => {
       console.log("data Added", data);
-      queryClient.prefetchQuery("getEmployees");
+      queryClient.prefetchQuery("getEmployees", getEmployees);
     },
   });
 
@@ -43,10 +33,9 @@ export default function AddEmployee() {
   if (addMutation.isSuccess)
     return (
       <Badge className={styles.center} bg="success">
-        Data inserted
+        Data added
       </Badge>
     );
-  dispatch(toggleChangeAction());
 
   return (
     <Formik
