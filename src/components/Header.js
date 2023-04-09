@@ -6,12 +6,15 @@ import {
   Form,
   Button,
 } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import Link from "next/link";
 
 function Header() {
+  const employeeId = useSelector((state) => state.client.updateID);
   return (
     <Navbar bg="light" expand="lg" sticky="top">
       <Container fluid>
-        <Navbar.Brand href="#home">Next Employee App</Navbar.Brand>
+        <Navbar.Brand href="#home">Employee App</Navbar.Brand>
         <Navbar.Toggle />
 
         <Navbar.Collapse id="navbarScroll">
@@ -20,9 +23,9 @@ function Header() {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Link</Nav.Link>
-            <NavDropdown title="Link" id="navbarScrollingDropdown">
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/[employeeId]">Employee</Nav.Link>
+            <NavDropdown title="Menu" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
                 Another action
