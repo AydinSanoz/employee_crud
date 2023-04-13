@@ -1,5 +1,6 @@
 import AddEmployee from "./AddEmployee";
 import UpdateEmployee from "./UpdateEmployee";
+import styles from "@/styles/Home.module.css";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
 
@@ -18,9 +19,11 @@ export default function Form() {
     terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
 
-  {
-    return updateId
-      ? UpdateEmployee({ updateId, schema })
-      : AddEmployee({ schema });
-  }
+  return (
+    <div className={styles.sticky}>
+      {updateId
+        ? UpdateEmployee({ schema, updateId })
+        : AddEmployee({ schema })}
+    </div>
+  );
 }
