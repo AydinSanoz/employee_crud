@@ -7,7 +7,6 @@ import {
 
 export default function handler(req, res) {
   connectDB().catch((err) => console.log(err));
-
   const { method } = req;
 
   switch (method) {

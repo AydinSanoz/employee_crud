@@ -44,7 +44,6 @@ export default function EmployeeTable() {
           </tr>
         </thead>
         <tbody>
-          {console.log(employees, "employeetable")}
           {employees?.map((employee, id) => {
             return <TR key={employee._id} employee={employee} />;
           })}
@@ -55,10 +54,10 @@ export default function EmployeeTable() {
 }
 
 function TR({ employee }) {
-  const router = useRouter();
   const formVisible = useSelector((state) => state.client.formVisible);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   function onUpdate() {
     dispatch(toggleChangeAction());

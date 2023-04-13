@@ -7,7 +7,6 @@ import {
   Button,
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import Link from "next/link";
 
 function Header() {
   const employeeId = useSelector((state) => state.client.updateID);

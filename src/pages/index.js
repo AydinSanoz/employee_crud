@@ -1,21 +1,21 @@
-import EmployeeTable from "@/components/EmployeeTable";
-import { Button } from "react-bootstrap";
-import Head from "next/head";
-import { useSelector, useDispatch } from "react-redux";
 import {
   deleteAction,
   toggleChangeAction,
   updateAction,
 } from "@/redux/reducer";
-import Form from "@/components/Form";
-import styles from "@/styles/Home.module.css";
 import { deleteEmployee, getEmployees } from "@/lib/helper";
+import EmployeeTable from "@/components/EmployeeTable";
+import { useSelector, useDispatch } from "react-redux";
+import styles from "@/styles/Home.module.css";
 import { useQueryClient } from "react-query";
+import { Button } from "react-bootstrap";
+import Form from "@/components/Form";
+import Head from "next/head";
 
 export default function Home() {
-  const queryClient = useQueryClient();
   const formVisible = useSelector((state) => state.client.formVisible);
   const deleteId = useSelector((state) => state.client.deleteId);
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   function handler() {
