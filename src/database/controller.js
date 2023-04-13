@@ -1,8 +1,10 @@
 import { employeeModel } from "@/models/employeeModel";
+import mongoose from "mongoose";
 
 export async function getEmployees(req, res) {
   await employeeModel
     .find()
+    .sort({ createdAt: -1 })
     .then((employees) => res.status(200).json(employees))
     .catch((err) => res.status(401).json({ error: err.message }));
 }
