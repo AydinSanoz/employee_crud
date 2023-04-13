@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Table, Badge } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { getEmployees } from "@/lib/helper";
+import { useRouter } from "next/router";
 
 export default function EmployeeTable() {
   const {
@@ -43,6 +44,7 @@ export default function EmployeeTable() {
           </tr>
         </thead>
         <tbody>
+          {console.log(employees, "employeetable")}
           {employees?.map((employee, id) => {
             return <TR key={employee._id} employee={employee} />;
           })}
@@ -53,6 +55,7 @@ export default function EmployeeTable() {
 }
 
 function TR({ employee }) {
+  const router = useRouter();
   const formVisible = useSelector((state) => state.client.formVisible);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -60,6 +63,7 @@ function TR({ employee }) {
   function onUpdate() {
     dispatch(toggleChangeAction());
     dispatch(updateAction(employee._id));
+    if (!formVisible) window.scrollTo(0, 0);
   }
   function onDelete() {
     console.log(formVisible);
@@ -71,6 +75,7 @@ function TR({ employee }) {
   }
   function onEmail() {
     console.log("onEmail pressed");
+    router.push(`employee/${employee._id}`);
   }
 
   return (

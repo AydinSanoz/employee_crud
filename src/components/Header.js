@@ -24,7 +24,7 @@ function Header() {
             navbarScroll
           >
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/[employeeId]">Employee</Nav.Link>
+            <Nav.Link href="/employee/[id]">Employee</Nav.Link>
             <NavDropdown title="Menu" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
